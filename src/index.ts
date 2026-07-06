@@ -1,8 +1,9 @@
 import { Elysia } from 'elysia'
 import { cors } from '@elysia/cors'
 import { vehicleModule } from './modules/vehicle'
-import { auth, OpenAPI } from './lib/auth';
+import { OpenAPI } from './lib/auth';
 import { openapi } from '@elysia/openapi'
+import { appBetterAuth } from './lib/app-better-auth'
 
 export const appOpenApi = new Elysia().use(
     openapi({
@@ -22,23 +23,6 @@ export const appCors = new Elysia({ name: 'cors' }).use(
     })
 );
 
-export const appBetterAuth = new Elysia({ name: 'better-auth' })
-.mount(auth.handler)
-.macro({
-    auth: {
-        async resolve({ status, request: { headers } }) {
-            const session = await auth.api.getSession({
-                headers
-            })
-            if (!session) return status(401)
-            return {
-                user: session.user,
-                session: session.session
-            }
-        }
-    }
-});
-
 const app = new Elysia()
     .use(appOpenApi)
     .use(appCors)
@@ -52,4 +36,12 @@ const app = new Elysia()
     .get('/', () => 'Hello World!') // health check endpoint in the future.
     .listen(3000)
 
-console.log(`Server is running on http://${app.server?.hostname}:${app.server?.port}`)
+const serverUrl = `http://${app.server?.hostname}:${app.server?.port}`
+
+console.log(
+    [
+        `Server is running on ${serverUrl}`,
+        `Application docs: ${serverUrl}/openapi`,
+        `Better Auth docs: ${serverUrl}/openapi (tag: Better Auth)`,
+    ].join('\n'),
+)

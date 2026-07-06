@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia'
 
 import { createVehicleBody, vehicleResponse } from './model'
 import { VehicleService } from './service'
-import { appBetterAuth } from '../..';
+import { appBetterAuth } from '../../lib/app-better-auth'
 
 export const vehicleModule = new Elysia({ name: 'vehicle.module' })
     .use(appBetterAuth)
