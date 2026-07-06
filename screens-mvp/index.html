@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screens MVP | AutoZ</title>
+    <style>
+      :root {
+        --bg: #f6f0e8;
+        --bg-strong: #efe4d8;
+        --surface: rgba(255, 255, 255, 0.78);
+        --surface-strong: #ffffff;
+        --text: #1d2430;
+        --muted: #5f6b7a;
+        --line: rgba(29, 36, 48, 0.1);
+        --accent: #ef5a11;
+        --accent-soft: rgba(239, 90, 17, 0.12);
+        --shadow: 0 24px 60px rgba(44, 31, 18, 0.12);
+        --radius: 26px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Space Grotesk", "Aptos", "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), transparent 34%),
+          radial-gradient(circle at top right, rgba(239, 90, 17, 0.1), transparent 28%),
+          linear-gradient(180deg, #fbf8f4 0%, var(--bg) 100%);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1360px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 40px 0 64px;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 32px;
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 245, 236, 0.92)),
+          var(--surface-strong);
+        box-shadow: var(--shadow);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -80px -120px auto;
+        width: 280px;
+        height: 280px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(239, 90, 17, 0.18), transparent 68%);
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 18px 0 14px;
+        max-width: 10ch;
+        font-size: clamp(2.6rem, 5vw, 5rem);
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+      }
+
+      .intro {
+        max-width: 72ch;
+        font-family: "DM Sans", "Aptos", "Segoe UI", sans-serif;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .chip {
+        padding: 11px 15px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+        margin-top: 28px;
+      }
+
+      .card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(12px);
+      }
+
+      .frame {
+        position: relative;
+        display: block;
+        padding: 14px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(242, 232, 221, 0.9));
+      }
+
+      .frame img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 18px;
+        border: 1px solid rgba(22, 29, 37, 0.08);
+      }
+
+      .content {
+        padding: 0 22px 24px;
+      }
+
+      .meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 18px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(29, 36, 48, 0.05);
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      h2 {
+        margin: 14px 0 10px;
+        font-size: 1.45rem;
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+      }
+
+      p {
+        margin: 0;
+        font-family: "DM Sans", "Aptos", "Segoe UI", sans-serif;
+        font-size: 0.98rem;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+
+      .footer {
+        margin-top: 28px;
+        padding: 20px 22px;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--muted);
+        font-family: "DM Sans", "Aptos", "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      code {
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: rgba(29, 36, 48, 0.08);
+        font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+        font-size: 0.9em;
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          width: min(100% - 24px, 1360px);
+          padding: 20px 0 40px;
+        }
+
+        .hero {
+          padding: 24px;
+        }
+
+        h1 {
+          max-width: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="eyebrow">Screens MVP</div>
+        <h1>AutoZ marketplace visual kit</h1>
+        <p class="intro">
+          Telas conceituais do marketplace de veiculos descrito em
+          <code>about.md</code>, desenhadas como mockups de alta fidelidade com
+          linguagem de componentes proxima de <code>React</code>,
+          <code>Tailwind CSS</code> e <code>shadcn/ui</code>.
+        </p>
+        <div class="stack">
+          <span class="chip">React Router</span>
+          <span class="chip">TanStack Query</span>
+          <span class="chip">Zustand</span>
+          <span class="chip">Tailwind CSS</span>
+          <span class="chip">shadcn/ui</span>
+          <span class="chip">React Hook Form</span>
+          <span class="chip">Zod</span>
+        </div>
+      </section>
+
+      <section class="gallery">
+        <article class="card">
+          <a class="frame" href="./assets/home.png">
+            <img src="./assets/home.png" alt="Tela inicial do marketplace AutoZ" />
+          </a>
+          <div class="content">
+            <div class="meta">Home</div>
+            <h2>Entrada editorial com busca forte</h2>
+            <p>
+              Hero amplo, busca principal, filtros rapidos, destaques e listagens
+              recentes. A direcao visual foi pensada para landing page de alto
+              impacto sem se afastar do que seria plausivel em Vite + Tailwind.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <a class="frame" href="./assets/search-results.png">
+            <img src="./assets/search-results.png" alt="Tela de resultados de busca do marketplace AutoZ" />
+          </a>
+          <div class="content">
+            <div class="meta">Search</div>
+            <h2>Resultados com filtros persistentes</h2>
+            <p>
+              Sidebar de filtros, chips ativos, ordenacao e paginação. A tela foi
+              montada para refletir um fluxo natural com TanStack Query e estado
+              global enxuto via Zustand.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <a class="frame" href="./assets/vehicle-details.png">
+            <img src="./assets/vehicle-details.png" alt="Tela de detalhes do veiculo AutoZ" />
+          </a>
+          <div class="content">
+            <div class="meta">Details</div>
+            <h2>Pagina de anuncio com foco em conversao</h2>
+            <p>
+              Galeria grande, preco destacado, seller card, especificacoes, mapa e
+              CTAs de contato. A hierarquia visual segue o tipo de pagina que
+              costuma converter melhor em marketplaces automotivos.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <a class="frame" href="./assets/dashboard.png">
+            <img src="./assets/dashboard.png" alt="Dashboard autenticado do marketplace AutoZ" />
+          </a>
+          <div class="content">
+            <div class="meta">Dashboard</div>
+            <h2>Painel do usuario com acoes claras</h2>
+            <p>
+              Visao resumida de anuncios, favoritos, perfil e atalhos de gestao.
+              A composicao favorece cards compactos, estados e quick actions bem
+              alinhados ao ecossistema shadcn/ui.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <a class="frame" href="./assets/create-listing.png">
+            <img src="./assets/create-listing.png" alt="Fluxo de criacao de anuncio AutoZ" />
+          </a>
+          <div class="content">
+            <div class="meta">Create Listing</div>
+            <h2>Formulario multi-etapas para publicar</h2>
+            <p>
+              Stepper, selects, switches, feedback de validacao e preview lateral.
+              A tela foi guiada por um fluxo plausivel de <code>React Hook Form</code>
+              com <code>Zod</code> e componentes de formulario do stack definido.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <a class="frame" href="./assets/favorites-profile.png">
+            <img src="./assets/favorites-profile.png" alt="Area de favoritos e perfil do AutoZ" />
+          </a>
+          <div class="content">
+            <div class="meta">Account</div>
+            <h2>Favoritos e perfil na mesma linguagem</h2>
+            <p>
+              Tabs segmentadas, grid de salvos e painel de perfil editavel. A ideia
+              aqui foi consolidar retencao e personalizacao em uma area de conta
+              simples, premium e responsiva.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <section class="footer">
+        Os mockups foram gerados como imagens raster e salvos em
+        <code>screens-mvp/assets/</code>. Esta pagina existe apenas para revisar a
+        direcao visual do MVP sem depender do frontend final.
+      </section>
+    </main>
+  </body>
+</html>
