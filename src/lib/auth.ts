@@ -1,9 +1,11 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 
-import { db } from '../database/client'
-import { schema } from '../database/schema'
+import { getDrizzleDb } from '../db'
+import { schema } from '../db/schema'
 import { openAPI } from 'better-auth/plugins'
+
+const db = await getDrizzleDb()
 
 export const auth = betterAuth({
     basePath: '/auth',

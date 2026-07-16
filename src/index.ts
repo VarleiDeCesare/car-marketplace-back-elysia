@@ -1,9 +1,14 @@
 import { Elysia } from 'elysia'
 import { cors } from '@elysia/cors'
-import { vehicleModule } from './modules/vehicle'
+import { getDb } from './db'
 import { OpenAPI } from './lib/auth';
 import { openapi } from '@elysia/openapi'
 import { appBetterAuth } from './lib/app-better-auth'
+import { hcApp } from './modules/health-check';
+import { createVehicleModule } from './modules/vehicle'
+import { DrizzleVehicleRepository } from './modules/vehicle/repository'
+import { VehicleService } from './modules/vehicle/service'
+import { logger } from './logger';
 
 export const appOpenApi = new Elysia().use(
     openapi({
@@ -23,11 +28,19 @@ export const appCors = new Elysia({ name: 'cors' }).use(
     })
 );
 
+const db = await getDb()
+
+//vehicle module
+const vehicleRepository = new DrizzleVehicleRepository(db)
+const vehicleService = new VehicleService(vehicleRepository)
+const vehicleModule = createVehicleModule({ vehicleService })
+
 const app = new Elysia()
     .use(appOpenApi)
     .use(appCors)
     .use(appBetterAuth)
     .use(vehicleModule)
+    .use(hcApp)
     .get('/user', ({ user }) => {
         return user
     }, {
@@ -38,10 +51,7 @@ const app = new Elysia()
 
 const serverUrl = `http://${app.server?.hostname}:${app.server?.port}`
 
-console.log(
-    [
-        `Server is running on ${serverUrl}`,
-        `Application docs: ${serverUrl}/openapi`,
-        `Better Auth docs: ${serverUrl}/openapi (tag: Better Auth)`,
-    ].join('\n'),
-)
+logger.info({
+    host: `Server is running on ${serverUrl}`,
+    documentation: `Application docs: ${serverUrl}/openapi`
+});

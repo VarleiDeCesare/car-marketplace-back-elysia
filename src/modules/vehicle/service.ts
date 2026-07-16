@@ -1,21 +1,19 @@
-import { db } from '../../database/client'
-import { table } from '../../database/schema'
+import type { CreateVehicleBody, VehicleResponse } from './model'
+import type { VehicleRepositoryContract } from './repository'
 
-import type { CreateVehicleBody } from './model'
+export interface VehicleServiceContract {
+    list(): Promise<VehicleResponse[]>
+    create(data: CreateVehicleBody): Promise<VehicleResponse>
+}
 
-export abstract class VehicleService {
-    static async list() {
-        return db.select().from(table.vehicle)
+export class VehicleService implements VehicleServiceContract {
+    constructor(private readonly vehicleRepository: VehicleRepositoryContract) {}
+
+    async list() {
+        return this.vehicleRepository.list()
     }
 
-    static async create(data: CreateVehicleBody) {
-        console.log('Creating vehicle with data:', data)
-        const [vehicle] = await db.insert(table.vehicle).values(data).returning()
-
-        if (!vehicle) {
-            throw new Error('Failed to create vehicle')
-        }
-
-        return vehicle
+    async create(data: CreateVehicleBody) {
+        return this.vehicleRepository.create(data)
     }
 }

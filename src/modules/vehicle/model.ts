@@ -1,7 +1,7 @@
 import { t } from 'elysia'
 import { createInsertSchema, createSelectSchema } from 'drizzle-typebox'
 
-import { table } from '../../database/schema'
+import { table } from '../../db/schema'
 
 const vehicleInsertSchema = createInsertSchema(table.vehicle, {
     make: t.String({ maxLength: 100 }),

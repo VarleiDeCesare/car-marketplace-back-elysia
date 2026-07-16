@@ -17,7 +17,8 @@
     "drizzle-orm": "^0.45.2",
     "drizzle-typebox": "^0.3.3",
     "elysia": "latest",
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "pino": "^10.3.1"
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
