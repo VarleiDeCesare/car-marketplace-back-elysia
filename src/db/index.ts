@@ -1,6 +1,7 @@
 // fallow-ignore-file coverage-gaps
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool, type PoolConfig } from "pg";
+import { getPostgresConfig } from "../config/env";
 
 // Do NOT use Pick<> — it strips generics from query builder methods.
 // Use the full concrete type returned by drizzle().
@@ -24,19 +25,15 @@ export const injectDb = (nextDb: DbClient) => {
   db = nextDb;
 };
 
-const requireEnv = (key: string) => {
-  const value = process.env[key];
-  if (!value) throw new Error(`Missing required environment variable: ${key}`);
-  return value;
-};
-
 const initEnvDb = async (): Promise<DrizzleDb> => {
+  const postgres = getPostgresConfig();
   const config: PoolConfig = {
-    host: requireEnv("DB_HOST"),
-    port: process.env.DB_PORT ? Number.parseInt(process.env.DB_PORT, 10) : 5432,
-    user: requireEnv("DB_USER"),
-    password: requireEnv("DB_PASS"),
-    database: requireEnv("DB_NAME"),
+    host: postgres.host,
+    port: postgres.port,
+    ssl: postgres.ssl,
+    user: postgres.user,
+    password: postgres.password,
+    database: postgres.database,
   };
 
   pool = new Pool(config);

@@ -4,11 +4,12 @@ import { getDb } from './db'
 import { OpenAPI } from './lib/auth';
 import { openapi } from '@elysia/openapi'
 import { appBetterAuth } from './lib/app-better-auth'
-import { hcApp } from './modules/health-check';
+import { checkApplicationHealth, hcApp } from './modules/health-check';
 import { createVehicleModule } from './modules/vehicle'
 import { DrizzleVehicleRepository } from './modules/vehicle/repository'
 import { VehicleService } from './modules/vehicle/service'
 import { logger } from './logger';
+import { observability } from './config/plugins/observability';
 
 export const appOpenApi = new Elysia().use(
     openapi({
@@ -40,6 +41,7 @@ const app = new Elysia()
     .use(appCors)
     .use(appBetterAuth)
     .use(vehicleModule)
+    .use(observability())
     .use(hcApp)
     .get('/user', ({ user }) => {
         return user
@@ -51,6 +53,7 @@ const app = new Elysia()
 
 const serverUrl = `http://${app.server?.hostname}:${app.server?.port}`
 
+await checkApplicationHealth()
 logger.info({
     host: `Server is running on ${serverUrl}`,
     documentation: `Application docs: ${serverUrl}/openapi`

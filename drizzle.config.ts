@@ -1,6 +1,6 @@
 import { defineConfig } from 'drizzle-kit'
 
-import { getPostgresConfig } from './src/database/env'
+import { getPostgresConfig } from './src/config/env'
 
 const postgres = getPostgresConfig()
 

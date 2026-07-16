@@ -1,7 +1,7 @@
 import type { Elysia } from "elysia";
 import { randomUUID } from "crypto";
 import type { Logger } from "pino";
-import { logger as defaultLogger } from "../logger";
+import { logger as defaultLogger } from "../../logger";
 
 export type ObservabilityOptions = {
   now?: () => number;

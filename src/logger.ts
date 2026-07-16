@@ -1,10 +1,13 @@
 import pino, { stdSerializers } from "pino";
+import { getEnv } from "./config/env";
+
+const env = getEnv();
 
 export const logger = pino({
-  level: process.env.LOG_LEVEL ?? "info",
+  level: env.LOG_LEVEL,
   base: {
-    app: process.env.APP_NAME ?? "car-marketplace-back",
-    env: process.env.NODE_ENV ?? "development",
+    app: env.APP_NAME ?? "car-marketplace-back",
+    env: env.NODE_ENV,
   },
   serializers: {
     err: stdSerializers.err,
