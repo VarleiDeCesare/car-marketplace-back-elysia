@@ -19,7 +19,6 @@ export const APP_LOG_LEVELS = [
   "warn",
 ] as const;
 
-export type AppEnvironment = (typeof APP_ENVIRONMENTS)[number];
 export type AppLogLevel = (typeof APP_LOG_LEVELS)[number];
 
 export const APP_ENV_SCHEMA = t.Object({
@@ -89,7 +88,8 @@ export const validateEnv = (config: Record<string, unknown>) => {
     throw new Error(`Invalid environment variables: ${messages.join("; ")}`);
   }
 
-  return Value.Decode(APP_ENV_SCHEMA, normalizedConfig);
+  const decodedEnv = Value.Decode(APP_ENV_SCHEMA, normalizedConfig);
+  return Value.Default(APP_ENV_SCHEMA, decodedEnv) as AppEnv;
 };
 
 let cachedEnv: AppEnv | undefined;
